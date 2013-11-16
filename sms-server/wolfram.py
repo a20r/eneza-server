@@ -21,12 +21,11 @@ class WolframAlpha():
 		self.searchQuery = searchQuery
 		self.url = None
 		self.elementTree = None
-		self.dictionaryResponce = None
+		self.dictionaryResponse = None
 
 		self.getURL()
 		self.setContent()
 		self.setResponse()
-		self.sendResponce()
 
 	def getURL(self):
 		"get the url of the wolfram alpha query"
@@ -54,7 +53,7 @@ class WolframAlpha():
 
 		#read the xml content returned
 		xmlContent = openURL.read()
-		#set the element tree from the xml responce
+		#set the element tree from the xml response
 		self.elementTree = xmlElementTree.fromstring(xmlContent)
 
 	def getPodFromTitle(self,title):
@@ -111,45 +110,44 @@ class WolframAlpha():
 			return None
 
 	def setResponse(self):
-		"method to set the full dictionary responce from the query"
+	    """method to set the full dictionary response from the query"""
 
 		#define title of interest
 		titleList = TITLELIST
-		dictionaryResponce = {}
+		dictionaryResponse = {}
 
-		#for all titles populate the dictionar responce
+		#for all titles populate the dictionar response
 		for title in titleList:
-			dictionaryResponce[title] = self.getPlaintextFromTitle(title)
+			dictionaryResponse[title] = self.getPlaintextFromTitle(title)
 
 		if DEBUG == True:
-			print dictionaryResponce
+			print dictionaryResponse
 
-		self.dictionaryResponce=dictionaryResponce
+		self.dictionaryResponse=dictionaryResponse
 
-	def sendResponce(self,maxCharacters=160):
-		"method to send the responce of the query"
+	def sendResponse(self,maxCharacters=160):
+		"method to send the response of the query"
 
-		dictionaryResponce = self.dictionaryResponce
-		responce = ""
+		dictionaryResponse = self.dictionaryResponse
+		response = ""
 
-		#for all elements in the dictionary add to the responce string
+		#for all elements in the dictionary add to the response string
 		for key in TITLELIST:
-			value = dictionaryResponce[key]
+			value = dictionaryResponse[key]
 			if value:
-				responce += "{}: {} \n".format(key,value)
+				response += "{}: {} \n".format(key,value)
 
-		#if the responce is longer than the max characters shorten
-		if len(responce)>maxCharacters:
+		#if the response is longer than the max characters shorten
+		if len(response)>maxCharacters:
 			toBeContinued = "...\n"
-			responce = responce[:maxCharacters-len(toBeContinued)]+toBeContinued
+			response = response[:maxCharacters-len(toBeContinued)]+toBeContinued
 
-		print responce
+		print response
 
-if __name__ == "__main__":
+if (__name__ == "__main__") and DEBUG:
 
-	#WolframAlpha("capital of england")
-	#WolframAlpha("y=12x+23")
-	#WolframAlpha("shakespear")
-	#WolframAlpha("shakespear")
+	WolframAlpha("capital of england")
+	WolframAlpha("y=12x+23")
+	WolframAlpha("shakespear")
 	WolframAlpha("2^n=4")
-	#WolframAlpha("differentiate(y=3x+10)")
+
