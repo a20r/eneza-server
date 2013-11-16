@@ -4,6 +4,7 @@ import xml.etree.cElementTree as xmlElementTree
 #global variables
 DEBUG = False
 APIKEY = "QH2XXJ-4UJJJ3E489"
+TITLELIST = ["Input","Input interpretation","Basic information","Result","Solution","Alternate form"]
 
 class WolframAlpha():
 	""" class to deal with returning and sorting data from wolfram alpha """
@@ -106,7 +107,7 @@ class WolframAlpha():
 		"method to set the full dictionary responce from the query"
 
 		#define title of interest
-		titleList = ["Input","Input interpretation","Basic information","Result","Alternate form"]
+		titleList = TITLELIST
 		dictionaryResponce = {}
 
 		#for all titles populate the dictionar responce
@@ -125,7 +126,8 @@ class WolframAlpha():
 		responce = ""
 
 		#for all elements in the dictionary add to the responce string
-		for key,value in dictionaryResponce.items():
+		for key in TITLELIST:
+			value = dictionaryResponce[key]
 			if value:
 				responce += "{}: {} \n".format(key,value)
 
@@ -137,7 +139,10 @@ class WolframAlpha():
 		print responce
 
 if __name__ == "__main__":
-	WolframAlpha("capital of england")
-	WolframAlpha("y=12x+23")
-	WolframAlpha("shakespear")
-	WolframAlpha("differentiate(y=3x+10)")
+
+	#WolframAlpha("capital of england")
+	#WolframAlpha("y=12x+23")
+	#WolframAlpha("shakespear")
+	#WolframAlpha("shakespear")
+	WolframAlpha("2^n=4")
+	#WolframAlpha("differentiate(y=3x+10)")
