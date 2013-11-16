@@ -28,10 +28,11 @@ class SMSServer:
             ]
         )
 
-    def parseAndMakeRequest(self, smsString):
+    def parseAndMakeRequest(self, phoneNumber, smsString):
         def retFunc():
             url, postData = translateToComponents(smsString)
             retJson = makeRequest(url, postData)
+            self.droid.smsSend(phoneNumber, retJson)
             self.droid.makeToast(retJson)
         return retFunc
 
@@ -41,7 +42,9 @@ class SMSServer:
                 messageDict = self.readMessages()
                 for numberStr in messageDict:
                     threading.Thread(
-                        target = self.parseAndMakeRequest(messageDict[numberStr])
+                        target = self.parseAndMakeRequest(
+                            numberStr, messageDict[numberStr]
+                        )
                     ).start()
 
 
