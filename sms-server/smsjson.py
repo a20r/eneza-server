@@ -26,10 +26,10 @@ def makeRequest(url, data):
     # create your HTTP request
     req = urllib2.Request(url = url, data = encdata, headers = headers)
 
-    # submit your request
-    res = urllib2.urlopen(req)
-
-    return res.read()
+    with urllib2.urlopen(req) as res:
+        # submit your request
+        res = urllib2.urlopen(req)
+        return res.read()
 
 
 def main():
