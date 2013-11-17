@@ -1,6 +1,11 @@
 
 import android
 import threading
+import wolfram
+
+searchEngineDict = {
+    "wolfram": wolfram.Wolfram
+}
 
 def makeRequest(url, postData):
     return "{'test': true}"
@@ -13,6 +18,12 @@ class SMSServer:
     def __init__(self):
         self.droid = android.Android()
 
+    def parseMessage(self, smsString):
+        queryType = smsString.split(":")[0].lower()
+        query = "".join(smsString.split(":")[1:])
+        queryResponse = searchEngineDict[queryType](query).sendResponse()
+        return queryResponse
+
     def readMessages(self):
 
         # gets the message return objects
@@ -23,9 +34,7 @@ class SMSServer:
         self.droid.smsMarkMessageRead(ids, True)
 
         return dict(
-            [
-                (mObj["address"], mObj["body"]) for mObj in msgObjs
-            ]
+            (mObj["address"], mObj["body"]) for mObj in msgObjs
         )
 
     def parseAndMakeRequest(self, phoneNumber, smsString):

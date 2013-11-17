@@ -4,7 +4,14 @@ import xml.etree.cElementTree as xmlElementTree
 #global variables
 DEBUG = False
 APIKEY = "QH2XXJ-4UJJJ3E489"
-TITLELIST = ["Input","Input interpretation","Basic information","Result","Solution","Alternate form"]
+TITLELIST = [
+    "Input",
+    "Input interpretation",
+    "Basic information",
+    "Result",
+    "Solution",
+    "Alternate form"
+]
 
 class WolframAlpha():
 	""" class to deal with returning and sorting data from wolfram alpha """
@@ -19,7 +26,6 @@ class WolframAlpha():
 		self.getURL()
 		self.setContent()
 		self.setResponse()
-		self.sendResponse()
 
 	def getURL(self):
 		"get the url of the wolfram alpha query"
@@ -79,7 +85,7 @@ class WolframAlpha():
 		#get all subPods of given pod
 		subPods = pod.getchildren()
 
-		#for all subPods 
+		#for all subPods
 		for subPod in subPods:
 			#find all plaintext tags
 			plaintext = subPod.findall("plaintext")
@@ -104,7 +110,7 @@ class WolframAlpha():
 			return None
 
 	def setResponse(self):
-		"method to set the full dictionary response from the query"
+	    """method to set the full dictionary response from the query"""
 
 		#define title of interest
 		titleList = TITLELIST
@@ -144,4 +150,4 @@ if (__name__ == "__main__") and DEBUG:
 	WolframAlpha("y=12x+23")
 	WolframAlpha("shakespear")
 	WolframAlpha("2^n=4")
-	WolframAlpha("differentiate(y=3x+10)")
+
