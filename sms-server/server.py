@@ -26,13 +26,18 @@ class SMSServer(reader.SMSReader):
             <Query Type>:<Phone Number>:<Query>
         """
 
+        if not ":" in smsString:
+            return None
+
         queryType = smsString.split(":")[0].lower()
         #phoneNumber = smsString.split(":")[1]
-        query = "".join(smsString.split(":")[1:])
+        query = smsString[smsString.index(':') + 1:].lstrip().rstrip()
+
         try:
             queryResponse = self.searchEngineDict[queryType](
                 query
             ).sendResponse()
+            print queryResponse
         except KeyError:
             return None
         return queryResponse

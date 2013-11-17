@@ -12,13 +12,13 @@ class EnezaAPI:
     def __init__(self, query):
         self.query = str(query).rstrip().lstrip()
 
-    def sendRequest(self):
+    def sendResponse(self):
         url, data, reqType = self.translate(self.query)
         if reqType == "POST":
             return self.makeRequest(url, data)
         elif reqType == "GET":
-            with urllib2.urlopen(url) as res:
-                return res.read()
+            res = urllib2.urlopen(url)
+            return res.read()
 
     def translate(self, smsString):
         """
@@ -27,29 +27,28 @@ class EnezaAPI:
         """
         try:
             loadedJson = json.loads(smsString)
+            print loadedJson
             return (
                 loadedJson["url"],
                 loadedJson["data"],
                 loadedJson["type"]
             )
-        except:
+        except Exception as e:
+            print e
             return None
 
     def makeRequest(self, url, data):
         """ Makes a POST request to a given URL and returns the response """
-
-        headers = {"Content-type": "text/html",
-                "Accept": "text/plain"}
-
         encdata = urllib.urlencode( { "data": json.dumps(data) } )
-
+        hdr = {
+            'Accept':
+                'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            }
         # create your HTTP request
-        req = urllib2.Request(url = url, data = encdata, headers = headers)
-
-        with urllib2.urlopen(req) as res:
-            # submit your request
-            return res.read()
-
+        req = urllib2.Request(url = url, data = encdata, headers = hdr)
+        # submit your request
+        res = urllib2.urlopen(req)
+        return res.read()
 
 def main():
     """Testing purposes"""
