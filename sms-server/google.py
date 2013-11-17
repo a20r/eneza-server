@@ -58,7 +58,7 @@ class Google():
 		#remove all hex caracter codes
 		defineString = reRemoveHex(htmlString)
 
-		#remove all characters outside parenthesese
+		#remove all characters outside parenthesese in preperation for json
 		firstIndex = defineString.find("{")
 		lastIndex = defineString.rfind("}")+1
 		jsonString = defineString[firstIndex:lastIndex]
@@ -75,25 +75,49 @@ class Google():
 		"method to set the responce to send"
 
 		content = self.content
-		definitions = []
 
-		#most horrible due to google dictionary ouput and not really worth commenting
-		if ("primaries" in content.keys()):
-			for item in content["primaries"]:
-				for key,value in item.items():
-					if key == "entries":
-						for subItem in value:
-							for subKey,subValue in subItem.items():
-								if subKey == "type":
-									if subValue == "meaning":
-										if ("terms" in subItem.keys()):
-											for subSubItem in subItem["terms"]:
-												if (subSubItem["type"] == "text") and ("text" in subSubItem.keys()):
-													definitions.append(subSubItem["text"])
+		def getEntries(content):
+			"returns the entry assoicated with the definition object"
 
-		#if no definitions found leave class variable as None
-		if (len(definitions) > 0):
-			self.definitions = definitions
+			if ("primaries" in content.keys()):
+				for item in content["primaries"]:
+					for key,value in item.items():
+						if key == "entries":
+							return value
+
+		def getAllMeaningTerms(entries):
+			"returns all meaning terms from the entries"
+
+			if not entries:
+				return None
+
+			for entry in entries:
+				for key,value in entry.items():
+					if key == "type":
+						if value == "meaning":
+							if ("terms" in entry.keys()):
+								return entry["terms"]
+
+		def getAllDefinitions(terms):
+			"returns all definitions from the terms"
+
+			#if not terms return None
+			if not terms:
+				return None
+
+			return [term["text"] for term in terms if ((term["type"] == "text") and ("text" in term.keys()))]
+
+		#run the functions to get definitions
+		entries = getEntries(content)
+		terms = getAllMeaningTerms(entries)
+		definitions = getAllDefinitions(terms)
+
+		if DEBUG:
+			print entries
+			print terms
+			print definitions
+
+		self.definitions = definitions
 
 
 	def sendResponse(self,maxCharacters=160):
@@ -125,10 +149,10 @@ class Google():
 		if DEBUG == True:
 			print response
 
-		return response
+		print response
 
 
-if (__name__ == "__main__") and DEBUG:
+if (__name__ == "__main__"):
 	Google("drum and bass")
 	Google("house")
 	Google("love")
