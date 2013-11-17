@@ -1,7 +1,7 @@
 
 import android
 import threading
-import wolfram, enezaapi as eneza
+import google,wolfram, enezaapi as eneza
 import os
 import smsreader as reader
 import poolmember
@@ -13,6 +13,7 @@ class SMSServer(reader.SMSReader):
 
         self.searchEngineDict = {
             "wolfram": wolfram.WolframAlpha,
+            "define" : google.Google,
             "api": eneza.EnezaAPI,
             "pool": poolmember.SMSPoolMember
         }
