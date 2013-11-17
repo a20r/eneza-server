@@ -9,8 +9,8 @@ eneza-server
     - Interact with the Eneza API via text message
 
 # Test Me
-- If the phone server is running (which it may not be in our case)
-    - text "Wolfram: { YOUR QUERY HERE }"
-    - text "Define: { YOUR WORD HERE }"
+- If the phone server is running
+    - text "Wolfram: { YOUR QUERY HERE }" to +447568575585
+    - text "Define: { YOUR WORD HERE }" to +447568575585
 - Now wait for a text back and enjoy the knowledge! :D
 
