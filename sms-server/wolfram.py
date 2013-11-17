@@ -10,7 +10,8 @@ TITLELIST = [
     "Basic information",
     "Result",
     "Solution",
-    "Alternate form"
+    "Alternate form",
+    "Alternate forms"
 ]
 
 class WolframAlpha():
@@ -26,15 +27,15 @@ class WolframAlpha():
 		self.getURL()
 		self.setContent()
 		self.setResponse()
+		#self.sendResponse()
 
 	def getURL(self):
 		"get the url of the wolfram alpha query"
 
 		searchQuery = self.searchQuery
 		#define GET parameters
-		print searchQuery
 		query = urllib.urlencode({"input":searchQuery,"appid":APIKEY})
-		print query
+
 		#construct url
 		url = "http://api.wolframalpha.com/v2/query?" + query
 
@@ -56,7 +57,8 @@ class WolframAlpha():
 		#read the xml content returned
 		xmlContent = openURL.read()
 		#set the element tree from the xml response
-		print xmlContent
+		if DEBUG:
+			print xmlContent
 		self.elementTree = xmlElementTree.fromstring(xmlContent)
 
 	def getPodFromTitle(self,title):
@@ -103,7 +105,7 @@ class WolframAlpha():
 		#get the pod
 		pod = self.getPodFromTitle(title)
 
-		if DEBUG == True:
+		if DEBUG:
 			print pod
 
 		#if there is a pod with given title return the included plaintext
@@ -122,7 +124,7 @@ class WolframAlpha():
 		for title in titleList:
 			dictionaryResponse[title] = self.getPlaintextFromTitle(title)
 
-		if DEBUG == True:
+		if DEBUG:
 			print dictionaryResponse
 
 		self.dictionaryResponse=dictionaryResponse
@@ -146,10 +148,11 @@ class WolframAlpha():
 
 		return response
 
-if (__name__ == "__main__") and DEBUG:
+if (__name__ == "__main__"):
 
 	WolframAlpha("capital of england")
 	WolframAlpha("y=12x+23")
+	WolframAlpha("y=4x+10")
 	WolframAlpha("shakespear")
 	WolframAlpha("2^n=4")
 
