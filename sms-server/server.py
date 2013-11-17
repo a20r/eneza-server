@@ -1,48 +1,46 @@
 
 import android
 import threading
-import wolfram
+import wolfram, enezaapi as eneza
+import os
+import smsreader as reader
+import poolmember
 
-searchEngineDict = {
-    "wolfram": wolfram.Wolfram
-}
-
-def makeRequest(url, postData):
-    return "{'test': true}"
-
-def translateToComponents(smsString):
-    return "www.example.com", "{}"
-
-class SMSServer:
+class SMSServer(reader.SMSReader):
 
     def __init__(self):
-        self.droid = android.Android()
+        super(SMSServer, self).__init__()
+
+        self.searchEngineDict = {
+            "wolfram": wolfram.WolframAlpha,
+            "api": eneza.EnezaAPI,
+            "pool": poolmember.SMSPoolMember
+        }
 
     def parseMessage(self, smsString):
+        """
+        Parses message and uses the necessary engine
+
+        SMS String formating:
+            <Query Type>:<Phone Number>:<Query>
+        """
+
         queryType = smsString.split(":")[0].lower()
+        #phoneNumber = smsString.split(":")[1]
         query = "".join(smsString.split(":")[1:])
-        queryResponse = searchEngineDict[queryType](query).sendResponse()
+        try:
+            queryResponse = self.searchEngineDict[queryType](
+                query
+            ).sendResponse()
+        except KeyError:
+            return None
         return queryResponse
-
-    def readMessages(self):
-
-        # gets the message return objects
-        msgObjs = self.droid.smsGetMessages(True).result
-
-        # marks the messages as read
-        ids = map(lambda msgDict: msgDict["_id"], msgObjs)
-        self.droid.smsMarkMessageRead(ids, True)
-
-        return dict(
-            (mObj["address"], mObj["body"]) for mObj in msgObjs
-        )
 
     def parseAndMakeRequest(self, phoneNumber, smsString):
         def retFunc():
-            url, postData = translateToComponents(smsString)
-            retJson = makeRequest(url, postData)
-            self.droid.smsSend(phoneNumber, retJson)
-            self.droid.makeToast(retJson)
+            queryResponse = self.parseMessage(smsString)
+            if queryResponse:
+                self.droid.smsSend(phoneNumber, queryResponse)
         return retFunc
 
     def start(self):
@@ -56,22 +54,11 @@ class SMSServer:
                         )
                     ).start()
 
-
-"""Hacky Test Functions"""
-
-def test_messageReader():
-    droid = android.Android()
-    unreadOnly = True
-    while True:
-        if droid.smsGetMessageCount(unreadOnly).result > 0:
-            msgObjs = droid.smsGetMessages(unreadOnly)
-            ids = map(lambda msgDict: msgDict['_id'], msgObjs.result)
-            droid.smsMarkMessageRead(ids, True)
-            print msgObjs
-            break
-
 if __name__ == "__main__":
     #test_messageReader()
-    sServer = SMSServer()
-    sServer.start()
-
+    try:
+        sServer = SMSServer()
+        sServer.start()
+        os.join()
+    except Exception as e:
+        print e

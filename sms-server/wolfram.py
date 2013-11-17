@@ -18,7 +18,7 @@ class WolframAlpha():
 
 	def __init__(self,searchQuery):
 
-		self.searchQuery = searchQuery
+		self.searchQuery = str(searchQuery).lstrip().rstrip()
 		self.url = None
 		self.elementTree = None
 		self.dictionaryResponse = None
@@ -32,9 +32,11 @@ class WolframAlpha():
 
 		searchQuery = self.searchQuery
 		#define GET parameters
+		print searchQuery
 		query = urllib.urlencode({"input":searchQuery,"appid":APIKEY})
+		print query
 		#construct url
-		url = "http://api.wolframalpha.com/v2/query?{}".format(query)
+		url = "http://api.wolframalpha.com/v2/query?" + query
 
 		if DEBUG:
 			print url
@@ -54,6 +56,7 @@ class WolframAlpha():
 		#read the xml content returned
 		xmlContent = openURL.read()
 		#set the element tree from the xml response
+		print xmlContent
 		self.elementTree = xmlElementTree.fromstring(xmlContent)
 
 	def getPodFromTitle(self,title):
@@ -110,9 +113,8 @@ class WolframAlpha():
 			return None
 
 	def setResponse(self):
-	    """method to set the full dictionary response from the query"""
+	    #define title of interest
 
-		#define title of interest
 		titleList = TITLELIST
 		dictionaryResponse = {}
 
@@ -135,14 +137,14 @@ class WolframAlpha():
 		for key in TITLELIST:
 			value = dictionaryResponse[key]
 			if value:
-				response += "{}: {} \n".format(key,value)
+				response += "%s: %s \n" % (key,value)
 
 		#if the response is longer than the max characters shorten
 		if len(response)>maxCharacters:
 			toBeContinued = "...\n"
 			response = response[:maxCharacters-len(toBeContinued)]+toBeContinued
 
-		print response
+		return response
 
 if (__name__ == "__main__") and DEBUG:
 
