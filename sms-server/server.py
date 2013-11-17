@@ -7,6 +7,10 @@ import smsreader as reader
 import poolmember
 
 class SMSServer(reader.SMSReader):
+    """
+    SMS Server that receives formatted data and makes the corresponding
+    HTTP requests.
+    """
 
     def __init__(self):
         super(SMSServer, self).__init__()
@@ -23,7 +27,7 @@ class SMSServer(reader.SMSReader):
         Parses message and uses the necessary engine
 
         SMS String formating:
-            <Query Type>:<Phone Number>:<Query>
+            <Query Type>:<Query>
         """
 
         if not ":" in smsString:
@@ -32,17 +36,23 @@ class SMSServer(reader.SMSReader):
         queryType = smsString.split(":")[0].lower()
         #phoneNumber = smsString.split(":")[1]
         query = smsString[smsString.index(':') + 1:].lstrip().rstrip()
+        print "QUERY", query
 
-        try:
-            queryResponse = self.searchEngineDict[queryType](
-                query
-            ).sendResponse()
-            print queryResponse
-        except KeyError:
-            return None
+        #try:
+        queryResponse = self.searchEngineDict[queryType](
+            query
+        ).sendResponse()
+        print "RESPONSE", queryResponse
+        #except KeyError:
+            #return None
         return queryResponse
 
     def parseAndMakeRequest(self, phoneNumber, smsString):
+        """
+        Used for thread creation. Returns a function that is set
+        as the target in a thread
+        """
+
         def retFunc():
             queryResponse = self.parseMessage(smsString)
             if queryResponse:
@@ -50,6 +60,9 @@ class SMSServer(reader.SMSReader):
         return retFunc
 
     def start(self):
+        """
+        Starts the main process
+        """
         while True:
             if self.droid.smsGetMessageCount(True).result > 0:
                 messageDict = self.readMessages()
