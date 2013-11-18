@@ -14,3 +14,7 @@ eneza-server
     - text "Define: { YOUR WORD HERE }" to +447568575585
 - Now wait for a text back and enjoy the knowledge! :D
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/wallarelvo/eneza-server/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
