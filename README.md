@@ -1,5 +1,4 @@
 eneza-server [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/wallarelvo/eneza-server/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
 ============
 
 # What do I do?
