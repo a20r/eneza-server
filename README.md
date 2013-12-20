@@ -1,4 +1,5 @@
-eneza-server
+eneza-server [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/wallarelvo/eneza-server/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 ============
 
 # What do I do?
@@ -13,8 +14,4 @@ eneza-server
     - text "Wolfram: { YOUR QUERY HERE }" to +447568575585
     - text "Define: { YOUR WORD HERE }" to +447568575585
 - Now wait for a text back and enjoy the knowledge! :D
-
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/wallarelvo/eneza-server/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
